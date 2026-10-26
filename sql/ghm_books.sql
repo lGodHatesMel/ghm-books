@@ -1,0 +1,26 @@
+-- Created automatically on resource start; kept here for reference.
+CREATE TABLE IF NOT EXISTS `ghm_books` (
+    `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `title` VARCHAR(80) NOT NULL,
+    `description` VARCHAR(200) NOT NULL DEFAULT '',
+    `author_name` VARCHAR(80) NOT NULL,
+    `author_citizenid` VARCHAR(50) NOT NULL,
+    `cover` VARCHAR(24) NOT NULL DEFAULT 'oxblood',
+    `page_count` INT UNSIGNED NOT NULL DEFAULT 0,
+    `image_count` INT UNSIGNED NOT NULL DEFAULT 0,
+    `pages` LONGTEXT NOT NULL,
+    `paper` VARCHAR(16) NOT NULL DEFAULT 'blank',
+    `font` VARCHAR(12) NOT NULL DEFAULT 'serif',
+    `dedication` VARCHAR(255) NOT NULL DEFAULT '',
+    `print_limit` INT UNSIGNED NOT NULL DEFAULT 0,
+    `copies` INT UNSIGNED NOT NULL DEFAULT 0,
+    `shared` TINYINT(1) NOT NULL DEFAULT 0,
+    `revision` INT UNSIGNED NOT NULL DEFAULT 1,
+    `last_editor` VARCHAR(80) NOT NULL DEFAULT '',
+    `backup_pages` LONGTEXT NULL,
+    `cover_design` LONGTEXT NULL,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    KEY `author_citizenid` (`author_citizenid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

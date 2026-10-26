@@ -1,0 +1,203 @@
+@import "tailwindcss";
+
+/*
+ * Admin menu design tokens.
+ *
+ * Flat, near-black surfaces separated by 1px hairlines, small radii, no blur and no
+ * gradients: FiveM's CEF does not draw `backdrop-filter`, so the "glass" look comes
+ * from semi-transparent solid fills + a faint top highlight line (see .glass-panel).
+ * Palette and spacing follow the sd-phone admin panel / ghm-scooters admin.
+ *
+ * The existing `dark-*` utility names are kept (every panel uses them) but now map
+ * onto the flat palette, and the radius/shadow scales are clamped so any leftover
+ * `rounded-xl` / `shadow-lg` in older panels still renders sharp and flat.
+ */
+@theme {
+  --font-sans: 'Inter', system-ui, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Cascadia Code', ui-monospace, 'Consolas', monospace;
+
+  --color-dark-900: #0c0d0f;
+  --color-dark-800: #121316;
+  --color-dark-700: #17181c;
+  --color-dark-600: #1f2127;
+  --color-dark-500: #33363e;
+  --color-dark-400: #4d515b;
+  --color-dark-300: #8b8f99;
+
+  --color-accent: #6fabc5;
+  --color-accent-light: #88c3d8;
+  --color-accent-dark: #4a7fa8;
+  --color-success: #3ecf73;
+  --color-warning: #e5a33b;
+  --color-danger: #ef5b5b;
+  --color-info: #4fb3d9;
+
+  --radius-sm: 3px;
+  --radius-md: 5px;
+  --radius-lg: 6px;
+  --radius-xl: 6px;
+  --radius-2xl: 6px;
+  --radius-3xl: 6px;
+
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: none;
+  --shadow-xl: none;
+  --shadow-2xl: none;
+
+  --text-2xs: 0.6875rem;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.12) transparent;
+}
+
+*::-webkit-scrollbar { width: 6px; height: 6px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 3px; }
+*::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }
+
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: transparent !important;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  color: #e4e5e8;
+  font-feature-settings: 'cv11', 'ss01';
+  -webkit-font-smoothing: antialiased;
+}
+
+button { font-family: inherit; }
+button:not(:disabled) { cursor: pointer; }
+button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 1px solid rgba(111, 171, 197, 0.6);
+  outline-offset: 1px;
+}
+
+.font-mono, .mono { font-variant-numeric: tabular-nums; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(3px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-6px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes drain {
+  from { transform: scaleX(1); }
+  to { transform: scaleX(0); }
+}
+@keyframes panelIn {
+  from { opacity: 0; transform: scale(0.985); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.animate-fadeIn { animation: fadeIn 0.2s ease-out; }
+.animate-slideIn { animation: slideIn 0.2s ease-out; }
+.animate-panelIn { animation: panelIn 0.18s cubic-bezier(0.25, 0.8, 0.25, 1); }
+
+/* Duration must match AUTO_DISMISS_MS in PlayerNotificationOverlay.tsx */
+.animate-drain { animation: drain 6s linear forwards; }
+
+/* Semi-transparent solid fill + hairline: the CEF-safe stand-in for glass. */
+.glass-panel {
+  background: rgba(12, 13, 15, 0.94);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+
+/* Badges */
+.badge {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+
+/* Book pages: flat paper fills with printed patterns, serif text. No blur (CEF). Each paper sets its own ink. */
+.paper {
+  --paper-bg: #ece5d3;
+  --paper-ink: #2a2620;
+  --paper-muted: #5a5242;
+  --paper-faint: #9b917a;
+  --paper-line: rgba(0, 0, 0, 0.28);
+  --pitch: 28px;
+  background: var(--paper-bg);
+  color: var(--paper-ink);
+  font-family: 'Lora', Georgia, 'Times New Roman', serif;
+  border: 1px solid rgba(0, 0, 0, 0.35);
+}
+.paper-t-lined {
+  --paper-line: rgba(70, 100, 160, 0.38);
+  background-image: repeating-linear-gradient(to bottom, transparent 0, transparent calc(var(--pitch) - 1px), var(--paper-line) calc(var(--pitch) - 1px), var(--paper-line) var(--pitch));
+  background-position: 0 36px;
+}
+.paper-t-grid {
+  --paper-line: rgba(70, 100, 160, 0.22);
+  background-image:
+    repeating-linear-gradient(to bottom, transparent 0, transparent 23px, var(--paper-line) 23px, var(--paper-line) 24px),
+    repeating-linear-gradient(to right, transparent 0, transparent 23px, var(--paper-line) 23px, var(--paper-line) 24px);
+}
+.paper-t-dotted {
+  background-image: radial-gradient(circle, rgba(60, 50, 40, 0.42) 1px, transparent 1.4px);
+  background-size: 22px 22px;
+  background-position: 11px 11px;
+}
+.paper-t-old {
+  --paper-bg: #d9c391;
+  --paper-ink: #3a2a14;
+  --paper-muted: #6b5530;
+  --paper-faint: #8d7648;
+  box-shadow: inset 0 0 60px rgba(120, 80, 20, 0.35), inset 0 0 14px rgba(90, 55, 10, 0.4);
+  background-image:
+    radial-gradient(circle at 18% 22%, rgba(130, 90, 30, 0.16) 0, transparent 16%),
+    radial-gradient(circle at 78% 68%, rgba(130, 90, 30, 0.14) 0, transparent 20%),
+    radial-gradient(circle at 60% 12%, rgba(90, 60, 20, 0.1) 0, transparent 10%);
+}
+.paper-t-black {
+  --paper-bg: #17181c;
+  --paper-ink: #e4e0d4;
+  --paper-muted: #a8a290;
+  --paper-faint: #6d6a5e;
+  --paper-line: rgba(255, 255, 255, 0.22);
+}
+.paper-t-lined .paper-body, .paper-t-lined .paper-quote { line-height: var(--pitch); }
+.paper-t-lined .paper-heading { line-height: calc(var(--pitch) * 1.5); }
+.paper-heading { font-weight: 600; font-size: 1.5rem; line-height: 1.25; }
+.paper-body { font-size: 1rem; line-height: 1.65; white-space: pre-wrap; }
+.paper-quote { font-style: italic; font-size: 1rem; line-height: 1.6; color: var(--paper-muted); white-space: pre-wrap; }
+.paper-ink { color: var(--paper-ink); }
+.paper-muted { color: var(--paper-muted); }
+.paper-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 4px; height: 24px; min-width: 24px; padding: 0 6px;
+  border: 1px solid var(--paper-faint); border-radius: 2px; font-size: 10px; font-weight: 600; color: var(--paper-muted); background: transparent;
+}
+.paper-btn:hover:not(:disabled) { background: color-mix(in srgb, var(--paper-ink) 10%, transparent); }
+.paper-btn:disabled { opacity: 0.3; }
+.paper-btn.on { background: color-mix(in srgb, var(--paper-ink) 16%, transparent); color: var(--paper-ink); }
+.paper-field { border: 1px dashed var(--paper-faint); background: transparent; color: var(--paper-ink); }
+.paper-field::placeholder { color: var(--paper-faint); }
+.paper-field:focus { border-color: var(--paper-muted); outline: none; }
+
+/* Page fonts. Handwriting and old print set smaller than serif, so they are sized up to read the same. */
+.paper-f-hand { font-family: 'Caveat', 'Segoe Script', 'Comic Sans MS', cursive; }
+.paper-f-hand .paper-body, .paper-f-hand .paper-quote { font-size: 1.35rem; line-height: 1.45; }
+.paper-f-hand .paper-heading { font-size: 1.9rem; }
+.paper-f-old { font-family: 'IM Fell English', 'Palatino Linotype', Georgia, serif; }
+.paper-f-old .paper-body, .paper-f-old .paper-quote { font-size: 1.05rem; }
+.paper-f-mono { font-family: 'JetBrains Mono', 'Courier New', monospace; }
+.paper-f-mono .paper-body, .paper-f-mono .paper-quote { font-size: 0.88rem; line-height: 1.7; }
+.paper-f-mono .paper-heading { font-size: 1.25rem; }
+.paper-t-lined.paper-f-hand .paper-body, .paper-t-lined.paper-f-hand .paper-quote,
+.paper-t-lined.paper-f-mono .paper-body, .paper-t-lined.paper-f-mono .paper-quote { line-height: var(--pitch); }
+.paper-signature { font-family: 'Caveat', 'Segoe Script', cursive; transform: rotate(-3deg); }
