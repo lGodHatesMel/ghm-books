@@ -233,7 +233,10 @@ local registered = false
 
 ---@param attempt? integer
 local function register(attempt)
-    if registered or not C.enabled or GetResourceState('sd-computers') ~= 'started' then return end
+    if registered or not C.enabled then return end
+    -- ('starting' too: sd-computers fires its ready event from its own start-up)
+    local state = GetResourceState('sd-computers')
+    if state ~= 'started' and state ~= 'starting' then return end
     attempt = attempt or 1
 
     local ok, result, reason = pcall(function()
@@ -303,10 +306,10 @@ CreateThread(function()
     register()
 end)
 
--- sd-computers keeps its apps in memory, so a restart of it loses ours.
-AddEventHandler('onResourceStart', function(resource)
-    if resource == 'sd-computers' then
-        registered = false
-        SetTimeout(1000, register)
-    end
+-- sd-computers keeps its apps in memory, so a restart of it loses ours. It fires this once its exports
+-- exist (onResourceStart('sd-computers') comes too early: its database setup is still running), on
+-- every start, so it also covers the first boot when it is slower than our retries below.
+AddEventHandler('sd-computers:ready', function()
+    registered = false
+    register()
 end)
